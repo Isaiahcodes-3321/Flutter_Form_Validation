@@ -1,115 +1,210 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
-void main() {
-  runApp(const MyApp());
-}
+void main() => runApp(const MyApp());
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  bool passwordchk = true;
+  String name = '';
+  var passwordEmpty = TextEditingController();
+  var eRROMessage = '';
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
-        primarySwatch: Colors.blue,
+      home: Scaffold(
+        body: Center(
+            child: SizedBox(
+          height: double.infinity,
+          width: double.infinity,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text.rich(
+                TextSpan(
+                  text: 'Welcom',
+                  style: const TextStyle(
+                      fontSize: 30, fontWeight: FontWeight.w900),
+                  children: [
+                    TextSpan(
+                      text: ' $name',
+                      style: const TextStyle(
+                          fontSize: 25, fontWeight: FontWeight.w800),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(height: 70,),
+              Align(
+                alignment: Alignment.center,
+                child: SizedBox(
+                  width: 300,
+                  child: Column(
+                    children: [
+                      TextField(
+                        decoration: const InputDecoration(
+                            enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.black)),
+                            focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.black)),
+                            hintText: 'User name'),
+                        onChanged: (value) {
+                          setState(() {
+                            name = value;
+                          });
+                        },
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      TextField(
+                        obscureText: passwordchk,
+                        decoration: InputDecoration(
+                          enabledBorder: const OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.black)),
+                          focusedBorder: const OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.black)),
+                          hintText: ' Password',
+                          suffixIcon: IconButton(
+                            icon: passwordchk
+                                ? const Icon(Icons.visibility_off)
+                                : const Icon(Icons.visibility),
+                            color: const Color.fromARGB(255, 28, 27, 27),
+                            onPressed: () {
+                              setState(() {
+                                passwordchk = !passwordchk;
+                              });
+                            },
+                          ),
+                        ),
+                        controller: passwordEmpty,
+                      ),
+                     Align(
+                        alignment: Alignment.centerLeft,
+                        // ignore: unnecessary_string_interpolations
+                        child: Text( eRROMessage,
+                        style:  TextStyle(
+                          color: Color.fromARGB(255, 236, 0, 0)),)),
+                      // this is to show dialog message
+                      Container(
+                        child: DialogExample(),
+                      ),
+                      const SizedBox(height: 30,),
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: Column(
+                          children: [
+                            MaterialButton(onPressed: (){
+                              var messageText = passwordEmpty.text;
+                              var passwordLength = passwordEmpty.text.length;
+                              if( messageText.isEmpty){
+                                eRROMessage = 'Password is required';
+                              }else if( passwordLength < 5){
+                                 eRROMessage = 'Password must exceed 4 Numbers';
+                              }
+                            },
+                            color: const Color.fromARGB(255, 57, 41, 175),
+                             child: const Text('Login',style: 
+                             TextStyle(color: 
+                             Color.fromARGB(255, 255, 255, 255))),),
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              )
+            ],
+          ),
+        )),
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
+class DialogExample extends StatefulWidget {
+  DialogExample({super.key});
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<DialogExample> createState() => _DialogExampleState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+class _DialogExampleState extends State<DialogExample> {
+  var resetpassword = Random().nextInt(5000);
 
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
+  bool chkbox = false;
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
-    return Scaffold(
-      appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        Expanded(
+          flex: 1,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(
+                height: 30,
+              ),
+              Text('Remember password'),
+              Checkbox(
+                checkColor: Colors.white,
+                activeColor: Color.fromARGB(255, 8, 0, 250),
+                value: chkbox,
+                onChanged: (bool? value) {
+                  setState(() {
+                    chkbox = value!;
+                  });
+                },
+              ),
+            ],
+          ),
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+        Expanded(
+          flex: 1,
+          child: TextButton(
+            onPressed: () => showDialog<String>(
+              context: context,
+              builder: (BuildContext context) => Dialog(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      const Text('New password\n'),
+                      Text('$resetpassword',
+                      style: const TextStyle(fontWeight: FontWeight.bold)
+                      ),
+                      const SizedBox(height: 15),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: const Text('Okey',
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.w400)),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            child: const Text('Forgot password',
+            style: TextStyle(color: Colors.black)),
+          ),
+        ),
+      ],
     );
   }
 }
